@@ -1,0 +1,12 @@
+Gopher Ghost
+============
+
+Gopher was released at the University of Minnesota in 1991, two years
+before the web took off. It was simple: you send one line (a selector),
+the server sends back a menu or a document, and the connection closes.
+
+Gopher Ghost brings that protocol back from the dead and uses it to
+serve today's internet - Hacker News, RSS feeds, plain text - as clean,
+fast, ad-free Gopher menus.
+
+This is a Kiroween 2026 hackathon project (category: Resurrection).

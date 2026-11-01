@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Run tests on Python save (draft)",
+  "description": "DRAFT, to be refined in Kiro. When a Python file under gopher_ghost/ or tests/ is saved, ask the agent to run the test suite and fix failures.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["gopher_ghost/**/*.py", "tests/**/*.py"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A Python file changed. Run `python3 -m unittest discover -s tests` and, if anything fails, explain the cause and propose a minimal fix that keeps RFC 1436 compliance."
+  }
+}

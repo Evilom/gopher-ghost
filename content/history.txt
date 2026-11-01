@@ -1,0 +1,11 @@
+A short history of Gopher
+-------------------------
+
+1991  The University of Minnesota team releases the Internet Gopher.
+1993  RFC 1436 documents the protocol. Gopher traffic is huge.
+1993  The university announces licensing fees for its server. Many
+      people move to the web, which is free.
+1990s Gopher fades, but never fully dies.
+2010s+ A small "Gopherspace" community keeps hundreds of servers alive.
+
+.dot-stuffing test: this line starts with a period.
