@@ -5,7 +5,7 @@ import time
 import urllib.request
 import xml.etree.ElementTree as ET
 
-UA = "gopher-ghost/0.1 (+https://github.com/Evilom/gopher-ghost)"
+UA = "gopher-ghost/0.2 (+https://github.com/Evilom/gopher-ghost)"
 HN_TOP = "https://hacker-news.firebaseio.com/v0/topstories.json"
 HN_ITEM = "https://hacker-news.firebaseio.com/v0/item/{}.json"
 
@@ -42,8 +42,30 @@ def hn_top(limit=15, fetch=_get):
             "score": it.get("score", 0),
             "by": it.get("by", "?"),
             "comments": it.get("descendants", 0),
+            "kids": it.get("kids") or [],
+            "text": it.get("text") or "",
         })
     return stories
+
+
+def hn_item(item_id, fetch=_get):
+    """Fetch one HN item (story or comment) by id."""
+    it = json.loads(fetch(HN_ITEM.format(int(item_id))))
+    if not it:
+        raise ValueError(f"HN item {item_id} missing")
+    return {
+        "id": it.get("id"),
+        "type": it.get("type", "story"),
+        "title": it.get("title", ""),
+        "url": it.get("url", ""),
+        "score": it.get("score", 0),
+        "by": it.get("by", "?"),
+        "comments": it.get("descendants", 0),
+        "kids": it.get("kids") or [],
+        "text": it.get("text") or "",
+        "parent": it.get("parent"),
+        "dead": bool(it.get("dead") or it.get("deleted")),
+    }
 
 
 def _strip(tag):
