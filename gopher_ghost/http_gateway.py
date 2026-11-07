@@ -26,40 +26,66 @@ GHOST = r"""
 """
 
 CSS = """
-:root { color-scheme: dark; }
+:root {
+  color-scheme: dark;
+  --bg: #0b0614;
+  --panel: #140a22;
+  --border: #3a2458;
+  --accent: #6b3fa0;
+  --text: #e8d5ff;
+  --muted: #8a7a9a;
+  --link: #c9a0ff;
+  --badge: #9b7bb8;
+  --err: #ff8a80;
+}
 body {
-  margin: 0; padding: 1.5rem;
+  margin: 0 auto; padding: 1.5rem;
+  max-width: 52rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  background: #0b0614; color: #e8d5ff;
+  background-color: var(--bg);
+  background-image: radial-gradient(ellipse at top, rgba(107,63,160,0.08), transparent 55%);
+  color: var(--text);
   line-height: 1.45;
 }
-a { color: #c9a0ff; text-decoration: none; border-bottom: 1px dotted #6b3fa0; }
-a:hover { color: #fff; border-bottom-color: #e8d5ff; }
-h1 { font-size: 1.1rem; font-weight: normal; color: #b388ff; }
-.ghost { color: #9b7bb8; margin: 0 0 1rem 0; }
-.info { color: #8a7a9a; white-space: pre-wrap; margin: 0.1rem 0; }
+a { color: var(--link); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+a:hover { color: #fff; border-bottom-color: var(--text); }
+h1 { font-size: 1.25rem; font-weight: normal; color: #b388ff; margin: 0.4rem 0 0.8rem; }
+.ghost { color: var(--badge); margin: 0 0 1rem 0; }
+.info { color: var(--muted); white-space: pre-wrap; margin: 0.1rem 0; }
 .menu { list-style: none; padding: 0; margin: 0.5rem 0 1.5rem; }
 .menu li { margin: 0.35rem 0; }
 .badge {
   display: inline-block; min-width: 2.4rem;
-  color: #0b0614; background: #9b7bb8;
+  color: var(--bg); background: var(--badge);
   padding: 0 0.35rem; margin-right: 0.5rem;
   border-radius: 2px; font-size: 0.75rem;
 }
 .text {
-  white-space: pre-wrap; background: #140a22;
-  border: 1px solid #3a2458; padding: 1rem; border-radius: 4px;
+  white-space: pre-wrap; background: var(--panel);
+  border: 1px solid var(--border); padding: 1rem; border-radius: 4px;
+  max-width: 72ch;
 }
-.err { color: #ff8a80; }
+.err { color: var(--err); }
+.topnav {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+  align-items: baseline; margin: 0 0 1rem;
+  font-size: 0.9rem; color: var(--muted);
+}
+.topnav .gopher { color: var(--muted); word-break: break-all; }
 .foot { margin-top: 2rem; color: #6a5a7a; font-size: 0.85rem; }
 form { margin: 1rem 0; }
 input[type=text] {
-  width: min(40rem, 90%); background: #140a22; color: #e8d5ff;
-  border: 1px solid #6b3fa0; padding: 0.4rem 0.6rem;
+  width: min(40rem, 90%); background: var(--panel); color: var(--text);
+  border: 1px solid var(--accent); padding: 0.4rem 0.6rem;
+  font-size: 1rem;
 }
 button {
-  background: #6b3fa0; color: #fff; border: 0; padding: 0.45rem 0.8rem;
+  background: var(--accent); color: #fff; border: 0; padding: 0.45rem 0.8rem;
   cursor: pointer; margin-left: 0.4rem;
+}
+@media (max-width: 480px) {
+  body { padding: 1rem; }
+  .badge { min-width: 2rem; margin-right: 0.35rem; }
 }
 """
 
@@ -96,6 +122,16 @@ def lookslike_menu(raw):
     return tabs >= max(1, len(sample) // 2)
 
 
+def topnav(selector=""):
+    gopher = "gopher://localhost/" + (selector.lstrip("/") if selector else "")
+    sel_show = html.escape(selector or "/")
+    gopher_show = html.escape(gopher)
+    back = '<a href="/">← home</a>' if selector not in ("", "/") else ""
+    bits = [back] if back else []
+    bits.append(f'<span class="gopher" title="gopher selector">{sel_show} · {gopher_show}</span>')
+    return '<nav class="topnav">' + " · ".join(bits) + "</nav>"
+
+
 def render_text_html(raw, title="text"):
     # strip terminating period / dot-stuffing
     out = []
@@ -104,7 +140,8 @@ def render_text_html(raw, title="text"):
             break
         out.append(line[1:] if line.startswith("..") else line)
     body = html.escape("\n".join(out))
-    return page(title, f'<div class="text">{body}</div>')
+    nav = topnav(title if title != "text" else "")
+    return page(title, nav + f'<div class="text">{body}</div>')
 
 
 def href_for_entry(entry):
@@ -154,11 +191,14 @@ def render_menu_html(raw, title="menu"):
             f'<li><span class="badge">{label}</span>'
             f'<a href="{html.escape(href)}"{target}>{disp}</a></li>'
         )
-    body = GHOST + f"<h1>{html.escape(title)}</h1><ul class=\"menu\">" + "".join(items) + "</ul>"
+    is_home = title == "Gopher Ghost"
+    nav = "" if is_home else topnav(title if title != "menu" else "")
+    ghost = GHOST if is_home else ""
+    body = nav + ghost + f"<h1>{html.escape(title)}</h1><ul class=\"menu\">" + "".join(items) + "</ul>"
     body += (
         '<div class="foot">'
         '<a href="/">home</a> · '
-        "Gopher Ghost HTTP gateway · black/purple haunted theme"
+        "Kiroween 2026 · Resurrection · no ads, just menus"
         "</div>"
     )
     return page(title, body)

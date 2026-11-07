@@ -71,31 +71,29 @@ class Router:
         out = [info(line) for line in BANNER.strip("\n").splitlines()]
         out += [
             info(""),
-            info("* The ghost guide whispers: follow a number, fear nothing."),
-            info("* Menus are type 1. Text is type 0. Search is type 7."),
+            info("Pick one. Don't fear it. Menus are 1, text is 0, ask is 7."),
             info(""),
-            self.link("0", "About Gopher Ghost", "/about"),
-            self.link("1", "Hacker News - top stories (live)", "/hn"),
-            self.link("7", "Read any RSS/Atom feed (enter URL)", "/rss"),
+            self.link("0", "About: what this ghost does", "/about"),
+            self.link("1", "Browse HN headlines (live)", "/hn"),
+            self.link("7", "Drop in an RSS/Atom feed", "/rss"),
             self.link(
                 "1",
-                "Example feed: Hacker News RSS",
+                "Demo: Hacker News RSS",
                 "/rss?https://hnrss.org/frontpage",
             ),
             self.link(
                 "7",
-                "Web page -> Gopher text (enter https URL)",
+                "Peel a web page into plain text (paste https)",
                 "/web",
             ),
             self.link(
                 "0",
-                "Example page: example.com (as text)",
+                "Demo: example.com as text",
                 "/web?https://example.com/",
             ),
             self.link("0", "A short history of Gopher", "/text/history.txt"),
             info(""),
-            info("Built for Kiroween 2026 - category: Resurrection"),
-            info("Official build path: keep refining this in Kiro."),
+            info("Kiroween 2026 · Resurrection · no ads, just menus"),
             end(),
         ]
         return "".join(out)

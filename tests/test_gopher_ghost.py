@@ -222,7 +222,8 @@ class HttpGatewayTests(unittest.TestCase):
             with urlopen(f"http://127.0.0.1:{port}/", timeout=5) as resp:
                 body = resp.read().decode()
             self.assertIn("Hacker News", body)
-            self.assertIn("background: #0b0614", body)
+            self.assertIn("--bg: #0b0614", body)
+            self.assertIn("radial-gradient", body)
             # follow about via /g
             about_sel = quote("/about", safe="")
             with urlopen(
